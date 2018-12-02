@@ -5,11 +5,9 @@
 require __DIR__.'/vendor/autoload.php';
 
 use Symfony\Component\Console\Application;
-// use ExampleCommand;
 
 $app = new Application("Advent of Code 2018");
 
-$app->add(new Aoc\ExampleCommand);
 $app->add(new Aoc\One\OneCommand);
 $app->add(new Aoc\Two\TwoCommand);
 

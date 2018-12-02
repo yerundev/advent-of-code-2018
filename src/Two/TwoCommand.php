@@ -2,21 +2,14 @@
 
 namespace Aoc\Two;
 
-use Symfony\Component\Console\Command\Command;
+use Aoc\BaseAocCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 
-class TwoCommand extends Command
+class TwoCommand extends BaseAocCommand
 {
-    private $data;
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->data = [];
-    }
 
     protected function configure()
     {
@@ -27,7 +20,7 @@ class TwoCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->readFile($input->getArgument('input'));
+        $this->readFile($input->getArgument('input'), 'string');
 
         $totalOccurances = array_fill(2, 2, 0);
 
@@ -42,7 +35,7 @@ class TwoCommand extends Command
 
         $checksum = array_product($totalOccurances);
         $output->writeln("Part one: {$checksum}");
-        
+
         $found = false;
 
         foreach ($this->data as $index => $word) {
@@ -90,16 +83,4 @@ class TwoCommand extends Command
         return $bottom . $top;
     }
 
-    private function readFile(string $file)
-    {
-        if ($file = fopen($file, 'r')) {
-            while (!feof($file)) {
-                $line = fgets($file);
-                if (!empty($line)) {
-                    $this->data[] = $line;
-                }
-            }
-            fclose($file);
-        }
-    }
 }
