@@ -32,7 +32,9 @@ class TwoCommand extends Command
         $totalOccurances = array_fill(2, 2, 0);
 
         foreach ($this->data as $word) {
+
             $occurances = array_unique(array_values($this->letterOccurances($word, 2, 3)));
+
             foreach ($occurances as $occurance) {
                 $totalOccurances[$occurance]++;
             }
@@ -40,6 +42,7 @@ class TwoCommand extends Command
 
         $checksum = array_product($totalOccurances);
         $output->writeln("Part one: {$checksum}");
+        
         $found = false;
 
         foreach ($this->data as $index => $word) {
@@ -48,11 +51,10 @@ class TwoCommand extends Command
                 break;
             }
 
-            $copy = $this->data;
-            unset($copy[$index]);
+            foreach (array_slice($this->data, $index + 1) as $other) {
 
-            foreach ($copy as $other) {
                 $commonSubStr = $this->common($word, $other);
+
                 if (strlen($word) - strlen($commonSubStr) == 1) {
                     $output->writeln("Part two: {$commonSubStr}");
                     $found = true;
@@ -86,7 +88,6 @@ class TwoCommand extends Command
         $bottom = substr($str1, 0, $nbrBottom);
         $top = substr($str1, strlen($str1) - $nbrTop);
         return $bottom . $top;
-        return count(array_diff(str_split($str1), str_split($str2)));
     }
 
     private function readFile(string $file)
