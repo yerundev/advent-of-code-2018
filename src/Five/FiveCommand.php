@@ -21,9 +21,14 @@ class FiveCommand extends BaseAocCommand
     {   
         $this->readFile($input->getArgument('input'), 'string');
         
-        $polymer = new Polymer($this->data[0], $output);
+        $polymer = $this->data[0];
         $polymer->react();
 
         $output->writeln($polymer->units());
+    }
+
+    protected function transformLine(string $line)
+    {
+        return new Polymer($line);
     }
 }

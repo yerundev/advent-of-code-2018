@@ -11,6 +11,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 class TwoCommand extends BaseAocCommand
 {
 
+    protected function transformLine(string $line)
+    {
+        return $line;
+    }
+
     protected function configure()
     {
         $this->setName('day-two')

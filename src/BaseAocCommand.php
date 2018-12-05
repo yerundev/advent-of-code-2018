@@ -10,14 +10,13 @@ abstract class BaseAocCommand extends Command
 {
     protected $data = [];
 
-    public function readFile(string $file, string $type)
+    public function readFile(string $file)
     {
         if ($file = fopen($file, 'r')) {
             while (!feof($file)) {
                 $line = fgets($file);
                 if (!empty($line)) {
-                    settype($line, $type);
-                    $this->data[] = $line;
+                    $this->data[] = $this->transformLine($line);
                 }
             }
             fclose($file);
@@ -38,4 +37,6 @@ abstract class BaseAocCommand extends Command
     }
 
     abstract protected function day(InputInterface $input, OutputInterface $output);
+    
+    abstract protected function transformLine(string $line);
 }

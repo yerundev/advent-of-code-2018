@@ -4,10 +4,9 @@ namespace Aoc\Five;
 
 class Polymer
 {
-    public function __construct(string $polymer, $output)
+    public function __construct(string $polymer)
     {
         $this->polymer = $polymer;
-        $this->output = $output;
     }
 
     public function react()
