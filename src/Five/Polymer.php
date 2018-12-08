@@ -12,24 +12,16 @@ class Polymer
     public function react()
     {
         $index = 0;
+        
         while ($index < strlen($this->polymer) - 1) {       
             while ($direction = $this->reactionDirection($index)) {
                 if ($direction == -1) {
-                    // $this->polymer = substr_replace($this->polymer, '', $index - 1, 2);
-                    // $index--;
-
                     $reagent = $this->polymer[$index] . $this->polymer[$index-1];
-                    $this->polymer = str_replace("{$reagent}", '', $this->polymer);
-                    $reagent = strrev($reagent);
-                    $this->polymer = str_replace("{$reagent}", '', $this->polymer);
+                    $this->dissolve($reagent);
                     $index--;
                 } else if ($direction == 1) {
-                    //$this->polymer = substr_replace($this->polymer, '', $index, 2);
-
                     $reagent = $this->polymer[$index] . $this->polymer[$index+1];
-                    $this->polymer = str_replace("{$reagent}", '', $this->polymer);
-                    $reagent = strrev($reagent);
-                    $this->polymer = str_replace("{$reagent}", '', $this->polymer);
+                    $this->dissolve($reagent);
                 }
             }
 
@@ -59,5 +51,12 @@ class Polymer
     {   
         return strtolower($unit1) == $unit2 && strtoupper($unit2) == $unit1
             || strtolower($unit2) == $unit1 && strtoupper($unit1) == $unit2;
+    }
+
+    private function dissolve(string $reagent)
+    {
+        $this->polymer = str_replace("{$reagent}", '', $this->polymer);
+        $reagent = strrev($reagent);
+        $this->polymer = str_replace("{$reagent}", '', $this->polymer);
     }
 }
