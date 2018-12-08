@@ -33,7 +33,7 @@ abstract class BaseAocCommand extends Command
         
         $seconds = $executionEndTime - $executionStartTime;
         
-        $output->writeln($seconds);
+        $output->writeln('Finished in ' . number_format($seconds, 4) . ' seconds.');
     }
 
     abstract protected function day(InputInterface $input, OutputInterface $output);
