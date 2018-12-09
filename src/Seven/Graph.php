@@ -6,10 +6,9 @@ class Graph
 {
     private $lookupTable;
 
-    public function __construct($output)
+    public function __construct()
     {
         $this->lookupTable = [];
-        $this->output = $output;
     }
 
     public function addNode(Node $node)
@@ -31,32 +30,46 @@ class Graph
         return $node;
     }
 
-    public function traverse(array &$order)
+    public function traverse(array &$order, int $workers)
     {
         $roots = $this->getRoots();
         
         $freeNodes = $roots; 
         $visited = [];
-        // $tick = 0;
+        $pending = [];
+        $tick = 0;
 
-        while (count($freeNodes) > 0) {
+        while (count($visited) < count(array_values($this->lookupTable))) {
             
-            usort($freeNodes, function ($a, $b) {
-                return strcmp($a->id(), $b->id());
-            });
-
-            $node = $freeNodes[0];
-            $visited[] = $node->id();
-            unset($freeNodes[0]);
-
-            foreach ($node->children() as $child) {
-                if ($child->open($visited)) {
-                    $freeNodes[] = $child;
+            foreach ($pending as $index => $pendingNode) {
+                if ($pendingNode->done($tick)) {
+                    $workers++;
+                    $order[] = $pendingNode->id();
+                    $visited[] = $pendingNode->id();
+                    unset($pending[$index]);
+                    foreach ($pendingNode->children() as $child) {
+                        if ($child->open($visited)) {
+                            $freeNodes[] = $child;
+                        }
+                    }
                 }
             }
 
-            $order[] = $node->id(); 
+            while (count($freeNodes) > 0 && $workers > 0) {
+                usort($freeNodes, function ($a, $b) {
+                    return strcmp($a->id(), $b->id());
+                });
+                $node = $freeNodes[0];
+                $node->start($tick);
+                $pending[] = $node;
+                unset($freeNodes[0]);
+                $workers = $workers - 1;
+            }
+            $tick++;
+            
         }
+
+        return $tick - 1;
     }
 
     private function getRoots()

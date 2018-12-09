@@ -19,20 +19,29 @@ class SevenCommand extends BaseAocCommand
 
     protected function day(InputInterface $input, OutputInterface $output)
     {   
-        $this->output = $output;
-        $graph = new Graph($output);
-        $this->readFile($input->getArgument('input'), 'string');
         
-        foreach ($this->data as $line) {
+        $this->readFile($input->getArgument('input'), 'string');
+        $graph = $this->constructGraph($this->data);
+        $order = [];
+        $graph->traverse($order, 1);
+        $output->writeln('Part one: ' . implode('', $order));
+
+        $ticks = $graph->traverse($order, 5);
+        $output->writeln('Part two: ' . $ticks);
+    }
+
+    public function constructGraph($input)
+    {
+        $graph = new Graph();
+
+        foreach ($input as $line) {
             $node = $graph->findOrCreate($line['node']);
             $pre = $graph->findOrCreate($line['pre']);
             $node->addPrerequisite($pre);
             $pre->addChild($node);
         }
 
-        $order = [];
-        $graph->traverse($order);
-        $output->writeln(implode('', $order));
+        return $graph;
     }
 
     protected function transformLine(string $line)
